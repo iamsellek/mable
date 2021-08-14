@@ -1,0 +1,27 @@
+{
+  "name": "mable",
+  "version": "0.1.0",
+  "description": "A helper for storing and iterating over data in hash tables in TS/JS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamsellek/mable.git"
+  },
+  "keywords": [
+    "hash",
+    "table",
+    "map",
+    "object",
+    "dictionary",
+    "iterate"
+  ],
+  "author": "Chris Sellek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iamsellek/mable/issues"
+  },
+  "homepage": "https://github.com/iamsellek/mable#readme"
+}
