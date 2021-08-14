@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/iamsellek/mable/issues"
   },
-  "homepage": "https://github.com/iamsellek/mable#readme"
+  "homepage": "https://github.com/iamsellek/mable#readme",
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
 }
