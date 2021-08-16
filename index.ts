@@ -12,6 +12,8 @@ class MableObject<T> {
     this.theObject = generic;
   }
 
+  // Start of helper functions.
+
   /**
    * Ensures that every value on The Object matches some conditional
    * provided in the callback.
@@ -49,7 +51,7 @@ class MableObject<T> {
   }
 
   /**
-   * Returns the first value in The Object that matches the conditional
+   * Returns the FIRST value in The Object that matches the conditional
    * provided by the callback or undefined if no matches are found.
    */
   find(callback: BooleanCallback<T>): T | undefined {
@@ -92,13 +94,6 @@ class MableObject<T> {
    */
   forEach(callback: VoidCallback<T>): void {
     Object.values(this.theObject).forEach(callback);
-  }
-
-  /**
-   * Returns the values stored in The Object as an array.
-   */
-  getAsArray(): T[] {
-    return Object.values(this.theObject);
   }
 
   /**
@@ -147,6 +142,56 @@ class MableObject<T> {
     });
 
     return false;
+  }
+
+  // End of helper functions.
+
+  // Start of setters, getters, updaters, and get-infoers.
+
+  /**
+   * Deletes the item at key "key" in The Object.
+   */
+  delete(key: string | number): void {
+    delete this.theObject[key];
+  }
+
+  /**
+   * Gets the item at key "key" in The Object.
+   */
+  get(key: string | number): T {
+    return this.theObject[key];
+  }
+
+  /**
+   * Returns the values stored in The Object as an array.
+   */
+  getAsArray(): T[] {
+    return Object.values(this.theObject);
+  }
+
+  /**
+   * Get the number of items stored in the MableObject.
+   */
+  getLength(): number {
+    return Object.keys(this.theObject).length;
+  }
+
+  /**
+   * Updates the item at "key" in The Object with only the
+   * changes passsed in as "updates."
+   */
+  update(key: string | number, updates: Partial<T>): void {
+    const item = this.get(key);
+
+    this.set(key, { ...item, ...updates });
+  }
+
+  /**
+   * Sets the item at key "key" in The Object. Overwrites any
+   * previously-existing item at that key.
+   */
+  set(key: string | number, value: T): void {
+    this.theObject[key] = value;
   }
 }
 
