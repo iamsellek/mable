@@ -95,6 +95,13 @@ class MableObject<T> {
   }
 
   /**
+   * Returns the values stored in The Object as an array.
+   */
+  getAsArray(): T[] {
+    return Object.values(this.theObject);
+  }
+
+  /**
    * Returns true if The Object contains a value that matches the conditional
    * provided by the callback. Returns false otherwise.
    */
@@ -118,7 +125,6 @@ class MableObject<T> {
    *
    * @returns a brand new MableObject with the changed values.
    */
-
   map(callback: ReturnGenericCallback<T>): MableObject<T> {
     const newValues: GenericObject<T> = {};
 
@@ -127,6 +133,20 @@ class MableObject<T> {
     });
 
     return new MableObject(newValues);
+  }
+
+  /**
+   * Returns true if at least ONE value in The Object returns true
+   * for the callback, returns false otherwise.
+   */
+  some(callback: BooleanCallback<T>): boolean {
+    this.forEach((item, index) => {
+      if (callback(item, index)) {
+        return true;
+      }
+    });
+
+    return false;
   }
 }
 
