@@ -95,6 +95,20 @@ class MableObject<T> {
   }
 
   /**
+   * Returns true if The Object contains a value that matches the conditional
+   * provided by the callback. Returns false otherwise.
+   */
+  includes(callback: BooleanCallback<T>): boolean {
+    this.forEach((item, index) => {
+      if (callback(item, index)) {
+        return true;
+      }
+    });
+
+    return false;
+  }
+
+  /**
    * Loops through each value on The Object. Makes a change to each value
    * based on the logic in the callback.
    *
