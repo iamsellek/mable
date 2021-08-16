@@ -92,3 +92,21 @@ describe('every', () => {
     expect(mFifth.every((item) => item.length === 1)).toBe(false);
   });
 });
+
+describe('filter', () => {
+  test('filters according to conditional and returns new object while leaving original untouched', () => {
+    const m = new MableObject(
+      makeGenericObjectStringFixture({
+        one: '1',
+        two: '2',
+        three: '3',
+        four: '4',
+        five: '5',
+      })
+    );
+    const m2 = m.filter((item) => item === '1' || item === '2');
+
+    expect(m.theObject).not.toEqual(m2.theObject);
+    expect(m2.theObject).toEqual({ one: '1', two: '2' });
+  });
+});
