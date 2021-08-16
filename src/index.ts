@@ -19,15 +19,15 @@ class MableObject<T> {
    * provided in the callback.
    */
   every(callback: BooleanCallback<T>): boolean {
-    let result = false;
+    let i = 0;
 
-    this.forEach((item, index) => {
-      result = callback(item, index);
-
-      if (!result) {
+    for (let item of Object.values(this.theObject)) {
+      if (!callback(item, i)) {
         return false;
       }
-    });
+
+      i += 1;
+    }
 
     return true;
   }
