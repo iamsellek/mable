@@ -2,7 +2,8 @@
   "name": "mable",
   "version": "0.1.0",
   "description": "A helper for storing and iterating over data in hash tables in TS/JS.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +26,9 @@
   },
   "homepage": "https://github.com/iamsellek/mable#readme",
   "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   }
 }
