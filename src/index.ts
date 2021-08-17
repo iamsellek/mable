@@ -181,7 +181,7 @@ class MableObject<T> {
   /**
    * Gets the item at key "key" in The Object.
    */
-  get(key: string | number): T {
+  get(key: string | number): T | undefined {
     return this.theObject[key];
   }
 
@@ -200,21 +200,26 @@ class MableObject<T> {
   }
 
   /**
-   * Updates the item at "key" in The Object with only the
-   * changes passsed in as "updates."
-   */
-  update(key: string | number, updates: Partial<T>): void {
-    const item = this.get(key);
-
-    this.set(key, { ...item, ...updates });
-  }
-
-  /**
    * Sets the item at key "key" in The Object. Overwrites any
    * previously-existing item at that key.
    */
   set(key: string | number, value: T): void {
     this.theObject[key] = value;
+  }
+
+  /**
+   * Updates the item at "key" in The Object with only the
+   * changes passsed in as "updates." Does NOTHING if item at
+   * "key" does not already exist.
+   */
+  update(key: string | number, updates: Partial<T>): void {
+    const item = this.get(key);
+
+    if (!item) {
+      return;
+    }
+
+    this.set(key, { ...item, ...updates });
   }
 }
 
