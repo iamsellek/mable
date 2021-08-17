@@ -652,7 +652,7 @@ describe('has', () => {
       [doug.id]: doug,
     });
 
-    expect(m.has('not-an-id')).toBe(true);
+    expect(m.has('not-an-id')).toBe(false);
   });
 });
 
