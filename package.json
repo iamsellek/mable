@@ -1,5 +1,5 @@
 {
-  "name": "mable",
+  "name": "mable-hash",
   "version": "1.0.0",
   "description": "A helper for storing and iterating over data in hash tables in TS/JS.",
   "main": "dist/index.js",
