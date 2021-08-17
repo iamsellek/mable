@@ -200,6 +200,14 @@ class MableObject<T> {
   }
 
   /**
+   * Returns true if a key-value pair exists for a given key.
+   * Returns false otherwise.
+   */
+  has(key: string): boolean {
+    return !!this.theObject[key];
+  }
+
+  /**
    * Sets the item at key "key" in The Object. Overwrites any
    * previously-existing item at that key.
    */

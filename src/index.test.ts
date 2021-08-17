@@ -612,6 +612,50 @@ describe('getLength', () => {
   });
 });
 
+describe('has', () => {
+  let han: Person;
+  let george: Person;
+  let doug: Person;
+
+  beforeEach(() => {
+    han = makePersonFixture();
+    george = makePersonFixture({
+      id: '1138',
+      firstName: 'George',
+      lastName: 'Lucas',
+      age: 77,
+      occupation: 'Movie director',
+    });
+    doug = makePersonFixture({
+      id: '42',
+      firstName: 'Douglas',
+      lastName: 'Adams',
+      age: 49,
+      occupation: 'Author',
+    });
+  });
+
+  test('returns true if a key-value pair exists for the given key', () => {
+    const m = new MableObject({
+      [george.id]: george,
+      [han.id]: han,
+      [doug.id]: doug,
+    });
+
+    expect(m.has(han.id)).toBe(true);
+  });
+
+  test('returns false if a key-value pair does not exist for the given key', () => {
+    const m = new MableObject({
+      [george.id]: george,
+      [han.id]: han,
+      [doug.id]: doug,
+    });
+
+    expect(m.has('not-an-id')).toBe(true);
+  });
+});
+
 describe('set', () => {
   let han: Person;
   let george: Person;

@@ -18,11 +18,13 @@ To delete a specific item, you need to splice together everything before the ite
 
 These are just a few examples and I'm already tired just typing the descriptions, much less running through the very mundane task of actually doing it all.
 
-## Object/POJO/Hash table/Record Drawbacks
+## Object/POJO/Hash Table/Map Class/Record Drawbacks
 
 Objects make adding, deleting, and finding items very easy. To add a new item, just type `object[key] = value.` Deleting an item is a quick, one-line task: `delete object[key]`. Finding an item requires no logic at all: `object[key]`. But when it comes time to loop through your data, your code gets clunky real quick.
 
 To loop through your keys or values, you're having to have calls to `Object.values()` or `Object.keys()` all over the place and you're having to figure out the proper way to loop through these each time. This can get hard to read and it's definitely a chore to type them over and over just to properly loop through your data.
+
+JS' Map class isn't much different. It does provide a built-in way to loop through items, but only with a forEach. You're responsible for coding your own .map() functionality, your own .some(), your own .every(), etc. Also, Map.map() just sounds confusing.
 
 # Enter mable
 
