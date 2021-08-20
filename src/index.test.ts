@@ -11,6 +11,12 @@ describe('MableObject base tests', () => {
 
     expect(m.theObject[person.id]).toEqual(person);
   });
+
+  test('allows the creation of a MableObject without an initial value', () => {
+    const m = new MableObject();
+
+    expect(m.theObject).toEqual({});
+  });
 });
 
 describe('every', () => {

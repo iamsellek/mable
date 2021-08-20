@@ -8,8 +8,8 @@ import {
 class MableObject<T> {
   public theObject: GenericObject<T>; // <- "The Object"
 
-  constructor(generic: GenericObject<T>) {
-    this.theObject = generic;
+  constructor(generic?: GenericObject<T>) {
+    this.theObject = generic ?? {};
   }
 
   // Start of helper functions.
