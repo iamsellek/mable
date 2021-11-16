@@ -1,8 +1,11 @@
 import {
   BooleanCallback,
+  BooleanCallbackAsync,
   GenericObject,
   ReturnGenericCallback,
+  ReturnGenericCallbackAsync,
   VoidCallback,
+  VoidCallbackAsync,
 } from './types';
 
 class MableObject<T> {
@@ -33,19 +36,123 @@ class MableObject<T> {
   }
 
   /**
+   * Same as every, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async everyAsyncEach(callback: BooleanCallbackAsync<T>): Promise<boolean> {
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      if (!(await callback(item, i))) {
+        return false;
+      }
+
+      i += 1;
+    }
+
+    return true;
+  }
+
+  /**
+   * Same as every, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async everyAsyncAll(callback: BooleanCallbackAsync<T>): Promise<boolean> {
+    let i = 0;
+    const promises: Promise<boolean>[] = [];
+
+    for (let item of Object.values(this.theObject)) {
+      promises.push(callback(item, i));
+
+      i += 1;
+    }
+
+    const resolvedPromises = await Promise.all(promises);
+
+    for (let promise of resolvedPromises) {
+      if (!promise) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
    * Returns a new MableObject containing only the items that pass the
    * conditional provided by the callback.
    */
   filter(callback: BooleanCallback<T>): MableObject<T> {
     const newValues: GenericObject<T> = {};
+    let i = 0;
 
-    Object.keys(this.theObject).forEach((key, index) => {
+    for (let key of Object.keys(this.theObject)) {
       const item = this.theObject[key];
 
-      if (callback(item, index)) {
+      if (callback(item, i)) {
         newValues[key] = item;
       }
-    });
+    }
+
+    return new MableObject(newValues);
+  }
+
+  /**
+   * Same as filter, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async filterAsyncEach(
+    callback: BooleanCallbackAsync<T>
+  ): Promise<MableObject<T>> {
+    let i = 0;
+    const newValues: GenericObject<T> = {};
+
+    for (let key of Object.keys(this.theObject)) {
+      const item = this.theObject[key];
+
+      if (await callback(item, i)) {
+        newValues[key] = item;
+      }
+
+      i += 1;
+    }
+
+    return new MableObject(newValues);
+  }
+
+  /**
+   * Same as filter, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async filterAsyncAll(
+    callback: BooleanCallbackAsync<T>
+  ): Promise<MableObject<T>> {
+    let i = 0;
+    const newValues: GenericObject<T> = {};
+    const promises: Promise<boolean>[] = [];
+
+    for (let key of Object.keys(this.theObject)) {
+      const item = this.theObject[key];
+
+      promises.push(callback(item, i));
+
+      i += 1;
+    }
+
+    const resolvedPromises = await Promise.all(promises);
+    i = 0;
+
+    for (let key of Object.keys(this.theObject)) {
+      const item = this.theObject[key];
+
+      if (resolvedPromises[i]) {
+        newValues[key] = item;
+      }
+
+      i += 1;
+    }
 
     return new MableObject(newValues);
   }
@@ -67,6 +174,47 @@ class MableObject<T> {
 
     for (let item of Object.values(this.theObject)) {
       if (callback(item, i)) {
+        return item;
+      }
+
+      i += 1;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Same as find, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async findAsyncEach(
+    callback: BooleanCallbackAsync<T>
+  ): Promise<T | undefined> {
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      if (await callback(item, i)) {
+        return item;
+      }
+
+      i += 1;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Same as find, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async findAsyncAll(
+    callback: BooleanCallbackAsync<T>
+  ): Promise<T | undefined> {
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      if (await callback(item, i)) {
         return item;
       }
 
@@ -102,13 +250,118 @@ class MableObject<T> {
   }
 
   /**
+   * Same as findAll, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async findAllAsyncEach(
+    callback: BooleanCallbackAsync<T>
+  ): Promise<MableObject<T> | undefined> {
+    const foundValues: GenericObject<T> = {};
+    let i = 0;
+
+    for (let key of Object.keys(this.theObject)) {
+      const item = this.theObject[key];
+
+      if (await callback(item, i)) {
+        foundValues[key] = item;
+      }
+
+      i += 1;
+    }
+
+    if (Object.keys(foundValues).length === 0) {
+      return undefined;
+    } else {
+      return new MableObject(foundValues);
+    }
+  }
+
+  /**
+   * Same as findAll, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async findAllAsyncAll(
+    callback: BooleanCallbackAsync<T>
+  ): Promise<MableObject<T> | undefined> {
+    const foundValues: GenericObject<T> = {};
+    let i = 0;
+    const promises: Promise<boolean>[] = [];
+
+    for (let key of Object.keys(this.theObject)) {
+      const item = this.theObject[key];
+
+      promises.push(callback(item, i));
+
+      i += 1;
+    }
+
+    const resolvedPromises = await Promise.all(promises);
+    i = 0;
+
+    for (let key of Object.keys(this.theObject)) {
+      const item = this.theObject[key];
+
+      if (resolvedPromises[i]) {
+        foundValues[key] = item;
+      }
+
+      i += 1;
+    }
+
+    if (Object.keys(foundValues).length === 0) {
+      return undefined;
+    } else {
+      return new MableObject(foundValues);
+    }
+  }
+
+  /**
    * Loops through each value on The Object and performs the logic
    * in the callback function on each one.
    *
-   * Syntactical sugar for Object.values(TheObject).forEach(callback);
+   * Syntactical sugar for `for (let item of Object.values(TheObject)) { callback() }`
    */
   forEach(callback: VoidCallback<T>): void {
-    Object.values(this.theObject).forEach(callback);
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      callback(item, i);
+
+      i += 1;
+    }
+  }
+
+  /**
+   * Same as forEach, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async forEachAsyncEach(callback: VoidCallbackAsync<T>): Promise<void> {
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      await callback(item, i);
+
+      i += 1;
+    }
+  }
+
+  /**
+   * Same as forEach, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async forEachAsyncAll(callback: VoidCallbackAsync<T>): Promise<void> {
+    let i = 0;
+    const promises: Promise<void>[] = [];
+
+    for (let item of Object.values(this.theObject)) {
+      promises.push(callback(item, i));
+
+      i += 1;
+    }
+
+    await Promise.all(promises);
   }
 
   /**
@@ -130,6 +383,50 @@ class MableObject<T> {
   }
 
   /**
+   * Same as includes, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async includesAsyncEach(callback: BooleanCallbackAsync<T>): Promise<boolean> {
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      if (await callback(item, i)) {
+        return true;
+      }
+
+      i += 1;
+    }
+
+    return false;
+  }
+
+  /**
+   * Same as includes, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async includesAsyncAll(callback: BooleanCallbackAsync<T>): Promise<boolean> {
+    let i = 0;
+    const promises: Promise<boolean>[] = [];
+
+    for (let item of Object.values(this.theObject)) {
+      promises.push(callback(item, i));
+
+      i += 1;
+    }
+
+    const resolvedPromises = await Promise.all(promises);
+
+    for (let resolvedPromise of resolvedPromises) {
+      if (resolvedPromise) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Loops through each value on The Object. Makes a change to each value
    * based on the logic in the callback.
    *
@@ -140,11 +437,55 @@ class MableObject<T> {
    * @returns a brand new MableObject with the changed values.
    */
   map(callback: ReturnGenericCallback<T>): MableObject<T> {
+    let i = 0;
     const newValues: GenericObject<T> = {};
 
-    Object.keys(this.theObject).forEach((key, index) => {
-      newValues[key] = callback(this.theObject[key], index);
-    });
+    for (let key of Object.keys(this.theObject)) {
+      newValues[key] = callback(this.theObject[key], i);
+    }
+
+    return new MableObject(newValues);
+  }
+
+  /**
+   * Same as map, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async mapAsyncEach(
+    callback: ReturnGenericCallbackAsync<T>
+  ): Promise<MableObject<T>> {
+    let i = 0;
+    const newValues: GenericObject<T> = {};
+
+    for (let key of Object.keys(this.theObject)) {
+      newValues[key] = await callback(this.theObject[key], i);
+    }
+
+    return new MableObject(newValues);
+  }
+
+  /**
+   * Same as map, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async mapAsyncAll(
+    callback: ReturnGenericCallbackAsync<T>
+  ): Promise<MableObject<T>> {
+    let i = 0;
+    const newValues: GenericObject<T> = {};
+    const promises: Promise<T>[] = [];
+
+    for (let key of Object.keys(this.theObject)) {
+      promises.push(callback(this.theObject[key], i));
+    }
+
+    const resolvedPromises = await Promise.all(promises);
+    i = 0;
+
+    for (let key of Object.keys(this.theObject)) {
+      newValues[key] = resolvedPromises[i];
+    }
 
     return new MableObject(newValues);
   }
@@ -162,6 +503,49 @@ class MableObject<T> {
       }
 
       i += 1;
+    }
+
+    return false;
+  }
+
+  /**
+   * Same as some, but asynchronous. Awaits each promise one at a time. Best
+   * for when you need each promise to resolve before moving on to the next one.
+   */
+  async someAsyncEach(callback: BooleanCallbackAsync<T>): Promise<boolean> {
+    let i = 0;
+
+    for (let item of Object.values(this.theObject)) {
+      if (await callback(item, i)) {
+        return true;
+      }
+
+      i += 1;
+    }
+
+    return false;
+  }
+
+  /**
+   * Same as some, but asynchronous. Fires off all promises and then
+   * awaits them all with a Promise.all(). Best when individual promises
+   * don't have to wait on each other to resolve.
+   */
+  async someAsyncAll(callback: BooleanCallbackAsync<T>): Promise<boolean> {
+    let i = 0;
+    const promises: Promise<boolean>[] = [];
+
+    for (let item of Object.values(this.theObject)) {
+      promises.push(callback(item, i));
+      i += 1;
+    }
+
+    const resolvedPromises = await Promise.all(promises);
+
+    for (let resolvedPromise of resolvedPromises) {
+      if (resolvedPromise) {
+        return true;
+      }
     }
 
     return false;
