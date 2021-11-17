@@ -212,9 +212,20 @@ class MableObject<T> {
     callback: BooleanCallbackAsync<T>
   ): Promise<T | undefined> {
     let i = 0;
+    const promises: Promise<boolean>[] = [];
 
     for (let item of Object.values(this.theObject)) {
-      if (await callback(item, i)) {
+      promises.push(callback(item, i));
+
+      i += 1;
+    }
+
+    i = 0;
+
+    const resolvedPromises = await Promise.all(promises);
+
+    for (let item of Object.values(this.theObject)) {
+      if (resolvedPromises[i]) {
         return item;
       }
 
@@ -459,6 +470,7 @@ class MableObject<T> {
 
     for (let key of Object.keys(this.theObject)) {
       newValues[key] = await callback(this.theObject[key], i);
+      i += 1;
     }
 
     return new MableObject(newValues);
@@ -478,6 +490,7 @@ class MableObject<T> {
 
     for (let key of Object.keys(this.theObject)) {
       promises.push(callback(this.theObject[key], i));
+      i += 1;
     }
 
     const resolvedPromises = await Promise.all(promises);
@@ -485,6 +498,7 @@ class MableObject<T> {
 
     for (let key of Object.keys(this.theObject)) {
       newValues[key] = resolvedPromises[i];
+      i += 1;
     }
 
     return new MableObject(newValues);
