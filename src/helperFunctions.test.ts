@@ -304,9 +304,10 @@ describe('find', () => {
     const callback = jest.fn();
     callback.mockReturnValueOnce(true);
 
-    m.find(callback);
+    const result = m.find(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(Object.values(m.theObject)[0]);
   });
 
   test('returns undefined if no matches are found', () => {
@@ -372,7 +373,7 @@ describe('find async', () => {
     const foundEach = await m.findAsyncEach((item) =>
       promisifyItem(item.firstName === han.firstName)
     );
-    const foundAll = await m.findAsyncEach((item) =>
+    const foundAll = await m.findAsyncAll((item) =>
       promisifyItem(item.firstName === han.firstName)
     );
 
@@ -393,9 +394,10 @@ describe('find async', () => {
     const callback = jest.fn();
     callback.mockResolvedValueOnce(true);
 
-    await m.findAsyncEach(callback);
+    const result = await m.findAsyncEach(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(Object.values(m.theObject)[0]);
   });
 
   test('(asyncAll) stops the (second) loop once it finds a match', async () => {
@@ -716,9 +718,10 @@ describe('includes', () => {
     const callback = jest.fn();
     callback.mockReturnValueOnce(true);
 
-    m.includes(callback);
+    const result = m.includes(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(result).toBe(true);
   });
 
   test('returns false when TheObject does not contain a matching item', () => {
@@ -785,9 +788,10 @@ describe('includes async', () => {
     const callback = jest.fn();
     callback.mockResolvedValueOnce(true);
 
-    await m.includesAsyncEach(callback);
+    const result = await m.includesAsyncEach(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(result).toBe(true);
   });
 
   test('(asyncAll) stops the (second) loop once an item is found', async () => {
@@ -1023,9 +1027,10 @@ describe('some', () => {
     });
     const callback = jest.fn();
     callback.mockReturnValueOnce(true);
-    m.some(callback);
+    const result = m.some(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(result).toBe(true);
   });
 
   test('returns false when no values match the conditional', () => {
@@ -1043,6 +1048,7 @@ describe('some async', () => {
   let han: Person;
   let george: Person;
   let doug: Person;
+  let objectValuesSpy = jest.spyOn(Object, 'values');
 
   beforeEach(() => {
     han = makePersonFixture();
@@ -1060,6 +1066,7 @@ describe('some async', () => {
       age: 49,
       occupation: 'Author',
     });
+    objectValuesSpy.mockClear();
   });
 
   test('returns true when just one value matches the conditional', async () => {
@@ -1081,7 +1088,7 @@ describe('some async', () => {
     );
   });
 
-  test('stops the loop once a true value is found', async () => {
+  test('(asyncEach) stops the loop once a true value is found', async () => {
     const m = new MableObject({
       [george.id]: george,
       [han.id]: han,
@@ -1089,9 +1096,28 @@ describe('some async', () => {
     });
     const callback = jest.fn();
     callback.mockResolvedValueOnce(true);
-    await m.some(callback);
+    const result = await m.someAsyncEach(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
+    expect(objectValuesSpy).toHaveBeenCalledTimes(1);
+    expect(result).toBe(true);
+  });
+
+  test('(asyncAll) stops the (second) loop once a true value is found', async () => {
+    const m = new MableObject({
+      [george.id]: george,
+      [han.id]: han,
+      [doug.id]: doug,
+    });
+    const callback = jest.fn();
+    callback.mockResolvedValueOnce(true);
+    callback.mockResolvedValueOnce(false);
+    callback.mockResolvedValueOnce(false);
+    const result = await m.someAsyncAll(callback);
+
+    expect(callback).toHaveBeenCalledTimes(3);
+    expect(objectValuesSpy).toHaveBeenCalledTimes(1);
+    expect(result).toBe(true);
   });
 
   test('returns false when no values match the conditional', async () => {
