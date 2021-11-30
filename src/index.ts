@@ -236,8 +236,9 @@ class MableObject<T> {
   }
 
   /**
-   * Returns ALL values in The Object that match the conditional provided
-   * by the callback or undefined if no matches are found.
+   * Returns ALL values in The Object as a new MableObject
+   * that match the conditional provided by the callback or
+   * undefined if no matches are found.
    */
   findAll(callback: BooleanCallback<T>): MableObject<T> | undefined {
     const foundValues: GenericObject<T> = {};
@@ -439,13 +440,7 @@ class MableObject<T> {
 
   /**
    * Loops through each value on The Object. Makes a change to each value
-   * based on the logic in the callback.
-   *
-   * @param callback A callback that will take an item of type T, change
-   * it in some way, and return the changed value, which is also of type
-   * T.
-   *
-   * @returns a brand new MableObject with the changed values.
+   * based on the logic in the callback. Returns a new MableObject with the results.
    */
   map(callback: ReturnGenericCallback<T>): MableObject<T> {
     let i = 0;
