@@ -14,13 +14,13 @@ describe('MableObject base tests', () => {
 
     const m = new MableObject({ [person.id]: person });
 
-    expect(m.theObject[person.id]).toEqual(person);
+    expect(m.getTheObject()[person.id]).toEqual(person);
   });
 
   test('allows the creation of a MableObject without an initial value', () => {
     const m = new MableObject();
 
-    expect(m.theObject).toEqual({});
+    expect(m.getTheObject()).toEqual({});
   });
 });
 
@@ -193,8 +193,8 @@ describe('filter', () => {
         item.firstName === han.firstName || item.firstName === george.firstName
     );
 
-    expect(m.theObject).not.toEqual(m2.theObject);
-    expect(m2.theObject).toEqual({ [han.id]: han, [george.id]: george });
+    expect(m.getTheObject()).not.toEqual(m2.getTheObject());
+    expect(m2.getTheObject()).toEqual({ [han.id]: han, [george.id]: george });
   });
 });
 
@@ -238,10 +238,16 @@ describe('filter async', () => {
       )
     );
 
-    expect(m.theObject).not.toEqual(m2Each.theObject);
-    expect(m2Each.theObject).toEqual({ [han.id]: han, [george.id]: george });
-    expect(m.theObject).not.toEqual(m2All.theObject);
-    expect(m2All.theObject).toEqual({ [han.id]: han, [george.id]: george });
+    expect(m.getTheObject()).not.toEqual(m2Each.getTheObject());
+    expect(m2Each.getTheObject()).toEqual({
+      [han.id]: han,
+      [george.id]: george,
+    });
+    expect(m.getTheObject()).not.toEqual(m2All.getTheObject());
+    expect(m2All.getTheObject()).toEqual({
+      [han.id]: han,
+      [george.id]: george,
+    });
   });
 });
 
@@ -307,7 +313,7 @@ describe('find', () => {
     const result = m.find(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(Object.values(m.theObject)[0]);
+    expect(result).toEqual(Object.values(m.getTheObject())[0]);
   });
 
   test('returns undefined if no matches are found', () => {
@@ -397,7 +403,7 @@ describe('find async', () => {
     const result = await m.findAsyncEach(callback);
 
     expect(callback).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(Object.values(m.theObject)[0]);
+    expect(result).toEqual(Object.values(m.getTheObject())[0]);
   });
 
   test('(asyncAll) stops the (second) loop once it finds a match', async () => {
@@ -419,7 +425,7 @@ describe('find async', () => {
 
     expect(callback).toHaveBeenCalledTimes(3);
     expect(objectValuesSpy).toHaveBeenCalledTimes(2);
-    expect(result).toEqual(Object.values(m.theObject)[0]);
+    expect(result).toEqual(Object.values(m.getTheObject())[0]);
   });
 
   test('returns undefined if no matches are found', async () => {
