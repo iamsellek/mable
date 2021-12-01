@@ -28,6 +28,7 @@ A helper for storing and iterating over data in hash tables in TS/JS.
       1. [set](#setkey-value-void)
       1. [update](#updatekey-value-void)
    1. [Examples](#examples)
+   1. [Adding Custom Helper Functions](#adding-custom-helper-functions)
 1. [The Why](#the-why)
 1. [Why Did You Name This "mable"?](#why-did-you-name-this-mable)
 
@@ -188,6 +189,33 @@ const result = await people.everyAsyncAll(async person => {
 
   return person.age === targetAge;
 });
+```
+
+## Adding Custom Helper Functions
+
+MableObject is a class, so to add your own functionality that might be specific to one object type or another, you just need to extend it.
+
+```
+
+class MablePeople extends MableObject<Person> {
+  getCombinedAge(): number {
+    let combinedAge = 0;
+
+    this.forEach(person => {
+      combinedAge += person.age;
+    });
+
+    return combinedAge;
+  }
+}
+
+let peopleHash = {...};
+const people = new MablePeople(peopleHash);
+
+// you can now call getCombinedAge on people.
+console.log(people.getCombinedAge());
+// as well as all of the normal MableObject functions.
+console.log(people.getLength());
 ```
 
 # The Why
