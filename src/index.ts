@@ -9,7 +9,7 @@ import {
 } from './types';
 
 class MableObject<T> {
-  public theObject: GenericObject<T>; // <- "The Object"
+  private theObject: GenericObject<T>; // <- "The Object"
 
   constructor(generic?: GenericObject<T>) {
     this.theObject = generic ?? {};
@@ -562,7 +562,7 @@ class MableObject<T> {
 
   // End of helper functions.
 
-  // Start of setters, getters, updaters, and get-infoers.
+  // Start of hash table management functions.
 
   /**
    * Deletes the item at key "key" in The Object.
@@ -572,10 +572,24 @@ class MableObject<T> {
   }
 
   /**
+   * Resets The Object to an empty hash table.
+   */
+  deleteAll(): void {
+    this.theObject = {};
+  }
+
+  /**
    * Gets the item at key "key" in The Object.
    */
   get(key: string | number): T | undefined {
     return this.theObject[key];
+  }
+
+  /**
+   * Returns a copy of The Object.
+   */
+  getTheObject(): GenericObject<T> {
+    return { ...this.theObject };
   }
 
   /**
@@ -593,7 +607,7 @@ class MableObject<T> {
   }
 
   /**
-   * Returns true if a key-value pair exists for a given key.
+   * Returns true if the key provided exists in The Object.
    * Returns false otherwise.
    */
   has(key: string): boolean {

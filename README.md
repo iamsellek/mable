@@ -7,7 +7,7 @@ A helper for storing and iterating over data in hash tables in TS/JS.
 1. [Installation](#installation)
 1. [Examples and API](#examples-and-api)
    1. [Instantiation](#instantiation)
-   1. [API](#api)
+   1. [API - Loop Functions](#api---loop-functions)
       1. [every](#everycallback-boolean)
       1. [filter](#filtercallback-mableobjectt)
       1. [find](#findcallback-theobject--undefined)
@@ -17,6 +17,16 @@ A helper for storing and iterating over data in hash tables in TS/JS.
       1. [map](#mapcallback-mableobjectt)
       1. [some](#somecallback-boolean)
    1. [Async](#async)
+   1. [API - Hash Table Management](#api---hash-table-management)
+      1. [delete](#deletekey-void)
+      1. [deleteAll](#deleteall-void)
+      1. [get](#getkey-t--undefined)
+      1. [getTheObject](#gettheobject-genericobjectt)
+      1. [getAsArray](#getasarray-t)
+      1. [getLength](#getlength-number)
+      1. [has](#haskey-boolean)
+      1. [set](#setkey-value-void)
+      1. [update](#updatekey-value-void)
    1. [Examples](#examples)
 1. [The Why](#the-why)
 1. [Why Did You Name This "mable"?](#why-did-you-name-this-mable)
@@ -43,7 +53,7 @@ const peopleEmpty = new MableObject<Person>(); // no initial value for theObject
 const peopleInitial = new MableObject(peopleHash); // initial value of peopleHash (type is inferred) for theObject.
 ```
 
-## API
+## API - Loop Functions
 
 ### every(callback): boolean
 
@@ -100,6 +110,44 @@ The functions that end in AsyncEach support async callbacks and fire/await each 
 ### {functionName}AsyncAll(asyncCallback)
 
 The functions that end in AsyncAll support async callbacks and fire off every promise to run in parallel. The promises are then all awaited with a `Promise.all`. You should use the AsyncAll functions when you don't necessarily need each promise to wait for the ones before it.
+
+## API - Hash Table Management
+
+### delete(key): void
+
+Deletes the value at the key provided.
+
+### deleteAll(): void
+
+Resets The Object to an empty hash table.
+
+### get(key): T | undefined
+
+Gets the item at key "key" in The Object.
+
+### getTheObject(): GenericObject\<T>
+
+Returns a copy of the object. This is NOT a deep copy.
+
+### getAsArray(): T[]
+
+Returns the values stored in The Object as an array.
+
+### getLength(): number
+
+Get the number of items stored in The Object.
+
+### has(key): boolean
+
+Returns true if the key provided exists in The Object. Returns false otherwise.
+
+### set(key, value): void
+
+Sets the item at key "key" in The Object. Overwrites any previously-existing item at that key.
+
+### update(key, value): void
+
+Updates the item at "key" in The Object with only the changes passsed in as "updates." Leaves other values in the item alone. Does NOTHING if item at "key" does not already exist.
 
 ## Examples
 
