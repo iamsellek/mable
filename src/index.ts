@@ -9,10 +9,20 @@ import {
 } from './types';
 
 class MableObject<T> {
-  private theObject: GenericObject<T>; // <- "The Object"
+  private theObject: GenericObject<T> = {}; // <- "The Object"
 
-  constructor(generic?: GenericObject<T>) {
-    this.theObject = generic ?? {};
+  constructor(dataset?: GenericObject<T> | T[], idKey?: string | number) {
+    if (Array.isArray(dataset)) {
+      if (!idKey) {
+        throw new Error('You must provide an idKey when using an array');
+      }
+
+      dataset.forEach((data) => {
+        this.theObject[idKey] = data;
+      });
+    } else if (dataset !== undefined) {
+      this.theObject = dataset;
+    }
   }
 
   // Start of helper functions.

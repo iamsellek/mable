@@ -3,6 +3,38 @@ import MableObject from './index';
 
 // Start of setters, getters, updaters, and get-infoers tests.
 
+describe('MableObject base tests', () => {
+  test('constructor with passed-in hash table as initial', () => {
+    const person = makePersonFixture();
+
+    const m = new MableObject({ [person.id]: person });
+
+    expect(m.getTheObject()[person.id]).toEqual(person);
+  });
+
+  test('constructor with passed-in array as initial', () => {
+    const people = [
+      makePersonFixture({ id: '1' }),
+      makePersonFixture({ id: '2' }),
+      makePersonFixture({ id: '3' }),
+    ];
+
+    const m = new MableObject(people);
+
+    expect(m.getTheObject()).toEqual({
+      '1': people[0],
+      '2': people[1],
+      '3': people[2],
+    });
+  });
+
+  test('allows the creation of a MableObject without an initial value', () => {
+    const m = new MableObject();
+
+    expect(m.getTheObject()).toEqual({});
+  });
+});
+
 describe('delete', () => {
   let han: Person;
   let george: Person;

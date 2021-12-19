@@ -8,22 +8,6 @@ const promisifyItem = async <T>(returnItem: T): Promise<T> =>
     }, 0);
   });
 
-describe('MableObject base tests', () => {
-  test('constructor', () => {
-    const person = makePersonFixture();
-
-    const m = new MableObject({ [person.id]: person });
-
-    expect(m.getTheObject()[person.id]).toEqual(person);
-  });
-
-  test('allows the creation of a MableObject without an initial value', () => {
-    const m = new MableObject();
-
-    expect(m.getTheObject()).toEqual({});
-  });
-});
-
 describe('every', () => {
   let han: Person;
   let george: Person;

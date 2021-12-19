@@ -42,7 +42,7 @@ npm install mable-hash
 
 ## Instantiation
 
-MableObject is a class with generic type T that applies to the hash table that you'll be using. It takes an optional initial value if you already have one. Mable refers to the hash table it's storing as `The Object`.
+MableObject is a class with generic type T that applies to the hash table that you'll be using. It takes an optional initial value if you already have one. The initial value can be either a JS object being used as a hash table or an array. Regardless of your initial value type, Mable stores its data in a hash table and references it as `The Object`.
 
 ```
 // The variable peopleHash is a hash table with ids of type string or number and values of type Person.
