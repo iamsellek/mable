@@ -32,10 +32,10 @@
   },
   "homepage": "https://github.com/iamsellek/mable#readme",
   "devDependencies": {
-    "@types/jest": "^27.4.1",
-    "jest": "^27.5.1",
-    "make-fixture": "^1.0.13",
-    "ts-jest": "^27.1.3",
-    "typescript": "^4.6.2"
+    "@types/jest": "^28.1.3",
+    "jest": "^28.1.1",
+    "make-fixture": "^1.0.14",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
   }
 }
